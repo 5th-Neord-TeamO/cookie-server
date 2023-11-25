@@ -1,5 +1,6 @@
 package com.cookie.dto;
 
+import com.cookie.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.Getter;
 @Builder
 public class PostResponseDto {
     private Long id;
-    private String nickname;
+    private MemberResponseDto member;
     private String title;
     private String content;
     private String createdDate;
