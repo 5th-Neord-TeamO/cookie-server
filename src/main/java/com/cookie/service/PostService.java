@@ -6,6 +6,7 @@ import com.cookie.global.exception.BusinessException;
 import com.cookie.global.response.ErrorCode;
 import com.cookie.repository.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -88,7 +89,7 @@ public class PostService {
                     .member(memberResponseDto)
                     .title(post.getTitle())
                     .description(post.getContent())
-                    .createdDate(post.getCreatedAt().withNano(0).toString())
+                    .createdDate(post.getCreatedAt().withNano(0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .imgUrlList(postImageDtos)
                     .build();
 
@@ -148,7 +149,7 @@ public class PostService {
                 .member(memberResponseDto)
                 .title(post.getTitle())
                 .description(post.getContent())
-                .createdDate(post.getCreatedAt().withNano(0).toString())
+                .createdDate(post.getCreatedAt().withNano(0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .imgUrlList(postImageDtos)
                 .build();
         return responseDto;
