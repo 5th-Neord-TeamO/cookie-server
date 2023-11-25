@@ -78,7 +78,7 @@ public class PostService {
                     .id(post.getId())
                     .member(memberResponseDto)
                     .title(post.getTitle())
-                    .content(post.getContent())
+                    .description(post.getContent())
                     .createdDate(post.getCreatedAt().toString())
                     .imgUrlList(postImageDtos)
                     .build();
@@ -88,7 +88,7 @@ public class PostService {
                         .id(detailResponseDto.getId())
                         .member(detailResponseDto.getMember())
                         .title(detailResponseDto.getTitle())
-                        .content(detailResponseDto.getContent())
+                        .description(detailResponseDto.getDescription())
                         .createdDate(detailResponseDto.getCreatedDate())
                         .build();
                 postResponseDtos.add(responseDto);
@@ -99,7 +99,7 @@ public class PostService {
                         .id(detailResponseDto.getId())
                         .member(detailResponseDto.getMember())
                         .title(detailResponseDto.getTitle())
-                        .content(detailResponseDto.getContent())
+                        .description(detailResponseDto.getDescription())
                         .createdDate(detailResponseDto.getCreatedDate())
                         .imgUrl(detailResponseDto.getImgUrlList().get(0).getImgUrl())
                         .build();
@@ -139,7 +139,7 @@ public class PostService {
                 .id(post.getId())
                 .member(memberResponseDto)
                 .title(post.getTitle())
-                .content(post.getContent())
+                .description(post.getContent())
                 .createdDate(post.getCreatedAt().toString())
                 .imgUrlList(postImageDtos)
                 .build();

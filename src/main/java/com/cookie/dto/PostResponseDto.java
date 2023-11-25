@@ -11,7 +11,7 @@ public class PostResponseDto {
     private Long id;
     private MemberResponseDto member;
     private String title;
-    private String content;
+    private String description;
     private String createdDate;
     private String imgUrl;
 }

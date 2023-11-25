@@ -13,7 +13,7 @@ public class PostDetailResponseDto {
     private Long id;
     private MemberResponseDto member;
     private String title;
-    private String content;
+    private String description;
     private String createdDate;
     private List<PostImageDto> imgUrlList;
 }
