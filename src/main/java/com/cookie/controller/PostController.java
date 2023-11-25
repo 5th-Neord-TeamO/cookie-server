@@ -2,6 +2,7 @@ package com.cookie.controller;
 
 import com.cookie.dto.PostCreateRequestDto;
 
+import com.cookie.dto.PostCreateResponseDto;
 import com.cookie.dto.PostDetailResponseDto;
 import com.cookie.dto.PostListResponseDto;
 import com.cookie.global.response.DataResponseDto;
@@ -31,7 +32,7 @@ public class PostController {
     }
 
     @PostMapping("/board/{board_id}")
-    public DataResponseDto<ResponseEntity> createPost(@PathVariable Long board_id, @RequestHeader("Authorization") String authorization, @RequestBody PostCreateRequestDto requestDto){
+    public DataResponseDto<PostCreateResponseDto> createPost(@PathVariable Long board_id, @RequestHeader("Authorization") String authorization, @RequestBody PostCreateRequestDto requestDto){
         return DataResponseDto.from(postService.savePost(board_id, authorization, requestDto));
     }
 
