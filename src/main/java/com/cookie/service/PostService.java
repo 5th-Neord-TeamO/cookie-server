@@ -181,10 +181,14 @@ public class PostService {
 
         Post post = commentService.validateExistPost(postId);
         List<Comment> comments= commentRepository.findAllByPostId(postId);
+        List<Image> images = imageRepository.findAllByPostId(postId);
 
         if (commentService.validateMember(member.getId(), post.getMember().getId())) {
             for (int i=0; i<comments.size(); i++) {
                 commentRepository.delete(comments.get(i));
+            }
+            for (int i=0; i<images.size(); i++) {
+                imageRepository.delete(images.get(i));
             }
             postRepository.delete(post);
         } else {
