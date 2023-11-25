@@ -79,6 +79,7 @@ public class BoardService {
 
         return BoardResponseDto.builder()
                 .code(randomString.toString())
+                .boardId(board.getId())
                 .build();
     }
 

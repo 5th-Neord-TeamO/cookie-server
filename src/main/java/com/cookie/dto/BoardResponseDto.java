@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class BoardResponseDto {
 
     private String code;
+    private Long boardId;
 }
