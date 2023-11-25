@@ -2,6 +2,7 @@ package com.cookie.controller;
 
 import com.cookie.dto.BoardRequestDto;
 import com.cookie.dto.BoardResponseDto;
+import com.cookie.dto.CodeReqeustDto;
 import com.cookie.dto.MyBoardListResponseDto;
 import com.cookie.global.response.DataResponseDto;
 import com.cookie.service.BoardService;
@@ -18,9 +19,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public DataResponseDto<BoardResponseDto> save(
-        @RequestHeader("Authorization") String authorization,
-        @RequestBody BoardRequestDto boardRequestDto) {
+    public DataResponseDto<BoardResponseDto> save(@RequestHeader("Authorization") String authorization, @RequestBody BoardRequestDto boardRequestDto) {
         return DataResponseDto.from(boardService.save(authorization, boardRequestDto));
     }
 
@@ -32,5 +31,10 @@ public class BoardController {
     @GetMapping("/participation")
     public DataResponseDto<List<MyBoardListResponseDto>> getParticipationList(@RequestHeader("Authorization") String authorization) {
         return DataResponseDto.from(boardService.getParticipantBoardList(authorization));
+    }
+
+    @GetMapping("/matchingcode/{board_id}")
+    public DataResponseDto<Boolean> isCorrectCode(@RequestHeader("Authorization") String authorization, @RequestBody CodeReqeustDto codeReqeustDto, @PathVariable Long board_id) {
+        return DataResponseDto.from(boardService.isCorrectCode(authorization, codeReqeustDto, board_id));
     }
 }
