@@ -10,22 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostCreateResponseDto {
 
-        private String createdAt;
-        private String title;
-        private String description;
-        private AuthorResponseDto member;
-
-        @Getter
-        @Builder
-        @NoArgsConstructor
-        @AllArgsConstructor
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        public static class AuthorResponseDto {
-            private Long id;
-            private String nickname;
-            private String imgUrl;
-        }
+    private long id;
 }

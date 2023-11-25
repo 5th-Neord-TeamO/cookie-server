@@ -35,22 +35,22 @@ public class PostService {
                     .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
             Post post = Post.builder()
-                    .board(board)
-                    .member(member)
-                    .title(requestDto.getTitle())
-                    .content(requestDto.getContent())
-                    .build();
+                .board(board)
+                .member(member)
+                .title(requestDto.getTitle())
+                .content(requestDto.getDescription())
+                .build();
+
+            imageRepository.save(Image.builder()
+                    .imgUrl(requestDto.getImgUrl())
+                    .post(post)
+                    .build()
+            );
+
             postRepository.save(post);
 
         return PostCreateResponseDto.builder()
-            .createdAt(post.getCreatedAt().toString())
-            .title(post.getTitle())
-            .description(post.getContent())
-            .member(PostCreateResponseDto.AuthorResponseDto.builder()
-                    .id(member.getId())
-                    .nickname(member.getNickname())
-                    .imgUrl(member.getProfile())
-                    .build())
+            .id(board.getId())
             .build();
 
     }
