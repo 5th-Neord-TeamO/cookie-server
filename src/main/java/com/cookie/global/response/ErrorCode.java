@@ -15,6 +15,7 @@ public enum ErrorCode {
 
     // Member
     MEMBER_NOT_FOUND("M000", HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."),
+    MEMBER_UNAUTHORIZED("M401", HttpStatus.UNAUTHORIZED, "허가되지 않은 유저입니다."),
 
     // Post
     POST_NOT_FOUND("P000", HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
