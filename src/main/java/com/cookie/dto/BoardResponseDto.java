@@ -13,7 +13,5 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BoardResponseDto {
 
-    private String title;
-    private String description;
-    private String imgUrl;
+    private String code;
 }
