@@ -10,6 +10,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class MyBoardListResponseDto {
+    private long id;
     private String imgUrl;
     private String title;
     private String description;

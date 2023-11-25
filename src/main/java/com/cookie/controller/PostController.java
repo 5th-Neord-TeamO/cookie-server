@@ -1,16 +1,15 @@
 package com.cookie.controller;
 
-import com.cookie.dto.PostCreateRequestDto;
+import com.cookie.dto.*;
 
-import com.cookie.dto.PostCreateResponseDto;
-import com.cookie.dto.PostDetailResponseDto;
-import com.cookie.dto.PostListResponseDto;
 import com.cookie.global.response.DataResponseDto;
 import com.cookie.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,7 +20,7 @@ public class PostController {
 
     //게시글 목록 조회
     @GetMapping("/board/{board_id}")
-    public DataResponseDto<PostListResponseDto> getPostList(@PathVariable Long board_id, @RequestHeader("Authorization") String authorization){
+    public DataResponseDto<List<PostResponseDto>> getPostList(@PathVariable Long board_id, @RequestHeader("Authorization") String authorization){
         return DataResponseDto.from(postService.findPostList(board_id, authorization));
     }
 

@@ -57,7 +57,7 @@ public class PostService {
 
     //게시글 목록 조회
     @Transactional(readOnly = true)
-    public PostListResponseDto findPostList(Long board_id, String authorization){
+    public List<PostResponseDto> findPostList(Long board_id, String authorization){
         Member member = memberRepository.findByToken(authorization)
                 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
@@ -113,10 +113,7 @@ public class PostService {
             }
         }
 
-        PostListResponseDto listResponseDto = PostListResponseDto.builder()
-                .postList(postResponseDtos)
-                .build();
-        return listResponseDto;
+        return postResponseDtos.stream().toList();
 
     }
 
