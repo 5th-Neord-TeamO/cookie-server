@@ -5,13 +5,17 @@ import com.cookie.domain.Member;
 import com.cookie.domain.MemberBoard;
 import com.cookie.dto.BoardRequestDto;
 import com.cookie.dto.BoardResponseDto;
+import com.cookie.dto.MyBoardListResponseDto;
 import com.cookie.global.exception.BusinessException;
 import com.cookie.global.response.ErrorCode;
 import com.cookie.repository.BoardRepository;
 import com.cookie.repository.MemberBoardRepository;
 import com.cookie.repository.MemberRepository;
+
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,7 +33,7 @@ public class BoardService {
 
     public BoardResponseDto save(String authorization, BoardRequestDto boardRequestDto) {
         Member member = memberRepository.findByToken(authorization)
-            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 이제까지 생성된 방 코드
         List<String> generatedCodes = boardRepository.findAllCodes();
@@ -57,24 +61,53 @@ public class BoardService {
         }
 
         Board board = boardRepository.save(
-            Board.builder()
-                .code(randomString.toString())
-                .title(boardRequestDto.getTitle())
-                .description(boardRequestDto.getDescription())
-                .imgUrl(boardRequestDto.getImgUrl())
-                .build()
+                Board.builder()
+                        .code(randomString.toString())
+                        .title(boardRequestDto.getTitle())
+                        .description(boardRequestDto.getDescription())
+                        .imgUrl(boardRequestDto.getImgUrl())
+                        .build()
         );
 
         memberBoardRepository.save(
-            MemberBoard.builder()
-                .member(member)
-                .board(board)
-                .isLeader(true)
-                .build()
+                MemberBoard.builder()
+                        .member(member)
+                        .board(board)
+                        .isLeader(true)
+                        .build()
         );
 
         return BoardResponseDto.builder()
-            .code(randomString.toString())
-            .build();
+                .code(randomString.toString())
+                .build();
+    }
+
+    public List<MyBoardListResponseDto> getMyBoardList(String authorization) {
+        Member member = memberRepository.findByToken(authorization)
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+
+        List<MemberBoard> findMemberBoard = memberBoardRepository.findAllByMemberId(member.getId());
+        List<Member> findAllMember = memberRepository.findAll();
+
+        List<MyBoardListResponseDto> response = new ArrayList<>();
+        List<String> memberList = new ArrayList<>();
+
+        for(Member members : findAllMember) {
+            memberList.add(members.getProfile());
+        }
+
+        for (MemberBoard memberBoard : findMemberBoard) {
+            if (memberBoard.getIsLeader()) {
+                Board board = memberBoard.getBoard();
+                MyBoardListResponseDto dto = MyBoardListResponseDto.builder()
+                        .memberList(memberList)
+                        .thumbnail(board.getImgUrl())
+                        .title(board.getTitle())
+                        .build();
+                response.add(dto);
+            }
+        }
+
+        return response;
     }
 }

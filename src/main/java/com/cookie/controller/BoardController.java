@@ -2,14 +2,13 @@ package com.cookie.controller;
 
 import com.cookie.dto.BoardRequestDto;
 import com.cookie.dto.BoardResponseDto;
+import com.cookie.dto.MyBoardListResponseDto;
 import com.cookie.global.response.DataResponseDto;
 import com.cookie.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/board")
@@ -23,5 +22,10 @@ public class BoardController {
         @RequestHeader("Authorization") String authorization,
         @RequestBody BoardRequestDto boardRequestDto) {
         return DataResponseDto.from(boardService.save(authorization, boardRequestDto));
+    }
+
+    @GetMapping
+    public DataResponseDto<List<MyBoardListResponseDto>> getMyBoardList(@RequestHeader("Authorization") String authorization) {
+        return DataResponseDto.from(boardService.getMyBoardList(authorization));
     }
 }
