@@ -5,6 +5,7 @@ import com.cookie.domain.Member;
 import com.cookie.domain.MemberBoard;
 import com.cookie.dto.BoardRequestDto;
 import com.cookie.dto.BoardResponseDto;
+import com.cookie.dto.CodeReqeustDto;
 import com.cookie.dto.MyBoardListResponseDto;
 import com.cookie.dto.PostResponseDto;
 import com.cookie.global.exception.BusinessException;
@@ -13,15 +14,15 @@ import com.cookie.repository.BoardRepository;
 import com.cookie.repository.MemberBoardRepository;
 import com.cookie.repository.MemberRepository;
 
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -95,7 +96,7 @@ public class BoardService {
         List<MyBoardListResponseDto> response = new ArrayList<>();
         List<String> memberList = new ArrayList<>();
 
-        for(Member members : findAllMember) {
+        for (Member members : findAllMember) {
             memberList.add(members.getProfile());
         }
 
@@ -159,4 +160,21 @@ public class BoardService {
 
     }
 
+    public Boolean isCorrectCode(String authorization, CodeReqeustDto codeRequestDto, Long boardId) {
+        memberRepository.findByToken(authorization)
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+
+        String requestCode = codeRequestDto.getCode();
+
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+        if (optionalBoard.isEmpty()) {
+            throw new BusinessException(ErrorCode.POST_NOT_FOUND);
+        }
+
+        Board board = optionalBoard.get();
+        String boardCode = board.getCode();
+
+        return requestCode.equals(boardCode);
+
+    }
 }
