@@ -15,14 +15,20 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{post_id}")
-    public DataResponseDto<CommentResponseDto> save(@RequestHeader("Authorization") String authorization, @RequestBody CommentRequestDto commentRequestDto, @PathVariable Long post_id) {
-        CommentResponseDto responseDto = commentService.save(authorization, commentRequestDto, post_id);
+    public DataResponseDto<CommentResponseDto> saveComment(@RequestHeader("Authorization") String authorization, @RequestBody CommentRequestDto commentRequestDto, @PathVariable Long post_id) {
+        CommentResponseDto responseDto = commentService.saveComment(authorization, commentRequestDto, post_id);
         return DataResponseDto.from(responseDto);
     }
 
     @PatchMapping("/{comment_id}")
     public DataResponseDto<?> patchComment(@RequestHeader("Authorization") String authorization, @RequestBody CommentRequestDto commentRequestDto, @PathVariable Long comment_id) {
         commentService.updateComment(authorization, commentRequestDto, comment_id);
+        return DataResponseDto.from(null);
+    }
+
+    @DeleteMapping("/{comment_id}")
+    public DataResponseDto<?> deleteComment(@RequestHeader("Authorization") String authorization, @PathVariable Long comment_id) {
+        commentService.deleteComment(authorization, comment_id);
         return DataResponseDto.from(null);
     }
 }
