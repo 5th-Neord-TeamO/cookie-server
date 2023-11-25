@@ -1,6 +1,5 @@
 package com.cookie.dto;
 
-import com.cookie.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,5 +13,5 @@ public class PostResponseDto {
     private String title;
     private String content;
     private String createdDate;
-    private String img;
+    private String imgUrl;
 }
