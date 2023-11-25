@@ -24,9 +24,12 @@ public class MemberBoard {
     @JoinColumn(name="board_id")
     private Board board;
 
+    Boolean isLeader;
+
     @Builder
-    public MemberBoard(Member member, Board board) {
+    public MemberBoard(Member member, Board board, Boolean isLeader) {
         this.member = member;
         this.board = board;
+        this.isLeader = isLeader;
     }
 }
