@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@Setter
 public class Post extends BaseTimeEntity {
 
     @Id

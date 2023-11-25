@@ -9,6 +9,7 @@ import com.cookie.repository.ImageRepository;
 import com.cookie.repository.MemberRepository;
 import com.cookie.repository.PostRepository;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
@@ -149,4 +151,21 @@ public class PostService {
         return responseDto;
     }
 
+    public Map<String, Long> updatePost(Long boardId, Long postId, String authorization, PostUpdateRequestDto requestDto) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+        if (imageRepository.findImageByPost_Id(postId).isEmpty()){
+            imageRepository.save(Image.builder()
+                    .imgUrl(requestDto.getImgUrl())
+                    .post(post)
+                    .build()
+            );
+        }
+        Image image = imageRepository.findImageByPost_Id(postId).get(0);
+        post.setTitle(requestDto.getTitle());
+        post.setContent(requestDto.getDescription());
+        image.setImgUrl(requestDto.getImgUrl());
+        return Map.of("id", 1L);
+    }
 }

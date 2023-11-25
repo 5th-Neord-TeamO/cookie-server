@@ -4,6 +4,7 @@ import com.cookie.dto.*;
 
 import com.cookie.global.response.DataResponseDto;
 import com.cookie.service.PostService;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +35,12 @@ public class PostController {
     public DataResponseDto<PostCreateResponseDto> createPost(@PathVariable Long board_id, @RequestHeader("Authorization") String authorization, @RequestBody PostCreateRequestDto requestDto){
         return DataResponseDto.from(postService.savePost(board_id, authorization, requestDto));
     }
+
+    // 게시글 수정
+    @PutMapping("/board/{board_id}/post/{post_id}")
+    public DataResponseDto<Map<String, Long>> updatePost(@PathVariable Long board_id, @PathVariable Long post_id, @RequestHeader("Authorization") String authorization, @RequestBody PostUpdateRequestDto requestDto){
+        return DataResponseDto.from(postService.updatePost(board_id, post_id, authorization, requestDto));
+    }
+
 
 }
