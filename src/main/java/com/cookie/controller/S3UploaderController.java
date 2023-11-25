@@ -20,8 +20,7 @@ public class S3UploaderController {
     private final S3UploaderService s3UploaderService;
 
     @PostMapping
-    public DataResponseDto<Map<String, String>> uploadFile(@RequestPart("multipartFile") MultipartFile multipartFile) {
-
+    public DataResponseDto<Map<String, String>> uploadFile(@RequestPart(value = "multipartFile", required = false) MultipartFile multipartFile) {
         return DataResponseDto.from(s3UploaderService.uploadFile(multipartFile));
     }
 }
