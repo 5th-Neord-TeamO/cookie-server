@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardResponseDto {
-
-    private String code;
-    private Long boardId;
+public class CommentResponseDto {
+    private Long id;
 }

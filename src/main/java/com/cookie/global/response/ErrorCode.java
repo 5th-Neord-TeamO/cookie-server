@@ -19,6 +19,9 @@ public enum ErrorCode {
     // Post
     POST_NOT_FOUND("P000", HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
 
+    // Comment
+    COMMENT_NOT_FOUND("C000", HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다."),
+
     // Server
     INTERNAL_ERROR("S000", HttpStatus.INTERNAL_SERVER_ERROR, "서버에 오류가 발생했습니다."),
     METHOD_NOT_ALLOWED("S001", HttpStatus.METHOD_NOT_ALLOWED, "지원하지 않는 HTTP Method 요청입니다.")
