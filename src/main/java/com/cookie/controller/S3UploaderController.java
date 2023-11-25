@@ -2,6 +2,7 @@ package com.cookie.controller;
 
 import com.cookie.global.response.DataResponseDto;
 import com.cookie.service.S3UploaderService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class S3UploaderController {
 
     private final S3UploaderService s3UploaderService;
 
+    @Operation(summary = "S3 MultipartFile파일 업로드 API")
     @PostMapping
     public DataResponseDto<Map<String, String>> uploadFile(@RequestPart(value = "multipartFile", required = false) MultipartFile multipartFile) {
         return DataResponseDto.from(s3UploaderService.uploadFile(multipartFile));
