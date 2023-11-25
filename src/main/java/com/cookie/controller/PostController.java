@@ -44,5 +44,11 @@ public class PostController {
         return DataResponseDto.from(postService.updatePost(board_id, post_id, authorization, requestDto));
     }
 
+    //게시글 삭제
+    @DeleteMapping("/board/{board_id}/post/{post_id}")
+    public DataResponseDto<?> deletePost(@RequestHeader("Authorization") String authorization, @PathVariable Long board_id, @PathVariable Long post_id) {
+        postService.deletePost(authorization, board_id, post_id);
+        return DataResponseDto.from(null);
+    }
 
 }
