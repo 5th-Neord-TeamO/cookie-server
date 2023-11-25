@@ -7,11 +7,13 @@ import com.cookie.dto.BoardRequestDto;
 import com.cookie.dto.BoardResponseDto;
 import com.cookie.dto.CodeReqeustDto;
 import com.cookie.dto.MyBoardListResponseDto;
+import com.cookie.dto.PostResponseDto;
 import com.cookie.global.exception.BusinessException;
 import com.cookie.global.response.ErrorCode;
 import com.cookie.repository.BoardRepository;
 import com.cookie.repository.MemberBoardRepository;
 import com.cookie.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -112,6 +114,8 @@ public class BoardService {
             }
         }
 
+        response.sort(Comparator.comparing(MyBoardListResponseDto::getId).reversed());
+
         return response;
     }
 
@@ -149,6 +153,8 @@ public class BoardService {
                 response.add(dto);
             }
         }
+
+        response.sort(Comparator.comparing(MyBoardListResponseDto::getId).reversed());
 
         return response;
 

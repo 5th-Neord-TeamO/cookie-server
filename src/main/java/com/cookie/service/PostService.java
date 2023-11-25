@@ -4,11 +4,9 @@ import com.cookie.domain.*;
 import com.cookie.dto.*;
 import com.cookie.global.exception.BusinessException;
 import com.cookie.global.response.ErrorCode;
-import com.cookie.repository.BoardRepository;
-import com.cookie.repository.ImageRepository;
-import com.cookie.repository.MemberRepository;
-import com.cookie.repository.PostRepository;
+import com.cookie.repository.*;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,42 +14,53 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final ImageRepository imageRepository;
 
+    private final CommentService commentService;
+
     @Transactional
-    public ResponseEntity savePost(Long board_id, String authorization, PostCreateRequestDto requestDto){
-        try {
+    public PostCreateResponseDto savePost(Long board_id, String authorization, PostCreateRequestDto requestDto){
             Member member = memberRepository.findByToken(authorization)
                     .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
             Board board = boardRepository.findById(board_id)
                     .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
             Post post = Post.builder()
-                    .board(board)
-                    .member(member)
-                    .title(requestDto.getTitle())
-                    .content(requestDto.getContent())
-                    .build();
-            postRepository.save(post);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                .board(board)
+                .member(member)
+                .title(requestDto.getTitle())
+                .content(requestDto.getDescription())
+                .build();
 
-        return new ResponseEntity(HttpStatus.CREATED);
+            imageRepository.save(Image.builder()
+                    .imgUrl(requestDto.getImgUrl())
+                    .post(post)
+                    .build()
+            );
+
+            postRepository.save(post);
+
+        return PostCreateResponseDto.builder()
+            .id(board.getId())
+            .build();
+
     }
 
     //게시글 목록 조회
     @Transactional(readOnly = true)
-    public PostListResponseDto findPostList(Long board_id, String authorization){
+    public List<PostResponseDto> findPostList(Long board_id, String authorization){
         Member member = memberRepository.findByToken(authorization)
                 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
@@ -78,8 +87,8 @@ public class PostService {
                     .id(post.getId())
                     .member(memberResponseDto)
                     .title(post.getTitle())
-                    .content(post.getContent())
-                    .createdDate(post.getCreatedAt().toString())
+                    .description(post.getContent())
+                    .createdDate(post.getCreatedAt().withNano(0).toString())
                     .imgUrlList(postImageDtos)
                     .build();
 
@@ -88,7 +97,7 @@ public class PostService {
                         .id(detailResponseDto.getId())
                         .member(detailResponseDto.getMember())
                         .title(detailResponseDto.getTitle())
-                        .content(detailResponseDto.getContent())
+                        .description(detailResponseDto.getDescription())
                         .createdDate(detailResponseDto.getCreatedDate())
                         .build();
                 postResponseDtos.add(responseDto);
@@ -99,7 +108,7 @@ public class PostService {
                         .id(detailResponseDto.getId())
                         .member(detailResponseDto.getMember())
                         .title(detailResponseDto.getTitle())
-                        .content(detailResponseDto.getContent())
+                        .description(detailResponseDto.getDescription())
                         .createdDate(detailResponseDto.getCreatedDate())
                         .imgUrl(detailResponseDto.getImgUrlList().get(0).getImgUrl())
                         .build();
@@ -107,10 +116,9 @@ public class PostService {
             }
         }
 
-        PostListResponseDto listResponseDto = PostListResponseDto.builder()
-                .postList(postResponseDtos)
-                .build();
-        return listResponseDto;
+        postResponseDtos.sort(Comparator.comparing(PostResponseDto::getCreatedDate).reversed());
+
+        return postResponseDtos.stream().toList();
 
     }
 
@@ -139,11 +147,47 @@ public class PostService {
                 .id(post.getId())
                 .member(memberResponseDto)
                 .title(post.getTitle())
-                .content(post.getContent())
-                .createdDate(post.getCreatedAt().toString())
+                .description(post.getContent())
+                .createdDate(post.getCreatedAt().withNano(0).toString())
                 .imgUrlList(postImageDtos)
                 .build();
         return responseDto;
     }
 
+    public Map<String, Long> updatePost(Long boardId, Long postId, String authorization, PostUpdateRequestDto requestDto) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+        if (imageRepository.findImageByPost_Id(postId).isEmpty()){
+            imageRepository.save(Image.builder()
+                    .imgUrl(requestDto.getImgUrl())
+                    .post(post)
+                    .build()
+            );
+        }
+        Image image = imageRepository.findImageByPost_Id(postId).get(0);
+        post.setTitle(requestDto.getTitle());
+        post.setContent(requestDto.getDescription());
+        image.setImgUrl(requestDto.getImgUrl());
+        return Map.of("id", 1L);
+    }
+
+
+    //게시글 삭제
+    public void deletePost(String authorization, Long boardId, Long postId) {
+        Member member = memberRepository.findByToken(authorization)
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Post post = commentService.validateExistPost(postId);
+        List<Comment> comments= commentRepository.findAllByPostId(postId);
+
+        if (commentService.validateMember(member.getId(), post.getMember().getId())) {
+            for (int i=0; i<comments.size(); i++) {
+                commentRepository.delete(comments.get(i));
+            }
+            postRepository.delete(post);
+        } else {
+            throw new BusinessException(ErrorCode.MEMBER_UNAUTHORIZED);
+        }
+    }
 }
