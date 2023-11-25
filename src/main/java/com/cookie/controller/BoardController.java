@@ -28,4 +28,9 @@ public class BoardController {
     public DataResponseDto<List<MyBoardListResponseDto>> getMyBoardList(@RequestHeader("Authorization") String authorization) {
         return DataResponseDto.from(boardService.getMyBoardList(authorization));
     }
+
+    @GetMapping("/participation")
+    public DataResponseDto<List<MyBoardListResponseDto>> getParticipationList(@RequestHeader("Authorization") String authorization) {
+        return DataResponseDto.from(boardService.getParticipantBoardList(authorization));
+    }
 }
