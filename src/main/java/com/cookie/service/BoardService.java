@@ -101,9 +101,10 @@ public class BoardService {
             if (memberBoard.getIsLeader()) {
                 Board board = memberBoard.getBoard();
                 MyBoardListResponseDto dto = MyBoardListResponseDto.builder()
-                        .memberList(memberList)
-                        .thumbnail(board.getImgUrl())
+                        .memberImgUrlList(memberList)
+                        .imgUrl(board.getImgUrl())
                         .title(board.getTitle())
+                        .description(board.getDescription())
                         .build();
                 response.add(dto);
             }
@@ -111,4 +112,43 @@ public class BoardService {
 
         return response;
     }
+
+    public List<MyBoardListResponseDto> getParticipantBoardList(String authorization) {
+        Member member = memberRepository.findByToken(authorization)
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+
+        List<MemberBoard> memberBoardList = memberBoardRepository.findAllByMemberId(member.getId());
+        List<Member> findAllMemberList = memberRepository.findAll();
+
+        List<MyBoardListResponseDto> response = new ArrayList<>();
+        List<String> memberImgUrlList = new ArrayList<>();
+
+        // 해당 게시판에 가입된 사람들 프로필 추가
+        for (Member members : findAllMemberList) {
+            for (MemberBoard allMemberBoard : memberBoardList) {
+                if (!members.getId().equals(allMemberBoard.getMember().getId())) {
+                    memberImgUrlList.add(members.getProfile());
+                    break;
+                }
+            }
+        }
+
+        for (MemberBoard memberBoard : memberBoardList) {
+            // 내 id랑 게시판의 회원 id가 같을 때
+            if (memberBoard.getMember().getId().equals(member.getId())) {
+                Board board = memberBoard.getBoard();
+                MyBoardListResponseDto dto = MyBoardListResponseDto.builder()
+                        .imgUrl(board.getImgUrl())
+                        .memberImgUrlList(memberImgUrlList)
+                        .title(board.getTitle())
+                        .description(board.getDescription())
+                        .build();
+                response.add(dto);
+            }
+        }
+
+        return response;
+
+    }
+
 }
