@@ -101,6 +101,7 @@ public class BoardService {
             if (memberBoard.getIsLeader()) {
                 Board board = memberBoard.getBoard();
                 MyBoardListResponseDto dto = MyBoardListResponseDto.builder()
+                        .id(board.getId())
                         .memberImgUrlList(memberList)
                         .imgUrl(board.getImgUrl())
                         .title(board.getTitle())
@@ -138,6 +139,7 @@ public class BoardService {
             if (memberBoard.getMember().getId().equals(member.getId())) {
                 Board board = memberBoard.getBoard();
                 MyBoardListResponseDto dto = MyBoardListResponseDto.builder()
+                        .id(board.getId())
                         .imgUrl(board.getImgUrl())
                         .memberImgUrlList(memberImgUrlList)
                         .title(board.getTitle())
