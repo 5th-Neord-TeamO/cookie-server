@@ -1,5 +1,6 @@
 package com.cookie.dto;
 
+import com.cookie.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,10 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 public class PostDetailResponseDto {
     private Long id;
-    private String nickname;
+    private MemberResponseDto member;
     private String title;
     private String content;
     private String createdDate;
-    private String img;
     private List<PostImageDto> imageList;
 }

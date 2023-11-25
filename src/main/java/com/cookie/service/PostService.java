@@ -65,12 +65,21 @@ public class PostService {
         for(int i=0; i<posts.size(); i++) {
             Post post = posts.get(i);
 
+            Member writer = memberRepository.findById(post.getMember().getId())
+                    .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+
             List<Image> imageList = imageRepository.findImageByPost_Id(post.getId());
             List<PostImageDto> postImageDtos = imageList.stream().map(PostImageDto::new).collect(Collectors.toList());
 
+            MemberResponseDto memberResponseDto = MemberResponseDto.builder()
+                    .id(writer.getId())
+                    .nickname(writer.getNickname())
+                    .profile(writer.getProfile())
+                    .build();
+
             PostDetailResponseDto detailResponseDto = PostDetailResponseDto.builder()
                     .id(post.getId())
-                    .nickname(post.getMember().getNickname())
+                    .member(memberResponseDto)
                     .title(post.getTitle())
                     .content(post.getContent())
                     .createdDate(post.getCreatedAt().toString())
@@ -79,7 +88,7 @@ public class PostService {
 
             PostResponseDto responseDto = PostResponseDto.builder()
                     .id(detailResponseDto.getId())
-                    .nickname(detailResponseDto.getNickname())
+                    .member(detailResponseDto.getMember())
                     .title(detailResponseDto.getTitle())
                     .content(detailResponseDto.getContent())
                     .createdDate(detailResponseDto.getCreatedDate())
@@ -105,11 +114,21 @@ public class PostService {
         Post post = postRepository.findById(post_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다: " + post_id));
 
+        Member writer = memberRepository.findById(post.getMember().getId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+
         List<Image> imageList = imageRepository.findImageByPost_Id(post_id);
         List<PostImageDto> postImageDtos = imageList.stream().map(PostImageDto::new).collect(Collectors.toList());
 
+        MemberResponseDto memberResponseDto = MemberResponseDto.builder()
+                .id(writer.getId())
+                .nickname(writer.getNickname())
+                .profile(writer.getProfile())
+                .build();
+
         PostDetailResponseDto responseDto = PostDetailResponseDto.builder()
-                .nickname(post.getMember().getNickname())
+                .id(post.getId())
+                .member(memberResponseDto)
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdDate(post.getCreatedAt().toString())
