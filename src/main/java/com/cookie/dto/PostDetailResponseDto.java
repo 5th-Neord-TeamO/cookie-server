@@ -1,12 +1,9 @@
 package com.cookie.dto;
 
-import com.cookie.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,5 +15,5 @@ public class PostDetailResponseDto {
     private String title;
     private String content;
     private String createdDate;
-    private List<PostImageDto> imageList;
+    private List<PostImageDto> imgUrlList;
 }

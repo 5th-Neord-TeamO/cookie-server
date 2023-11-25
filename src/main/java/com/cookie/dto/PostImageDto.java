@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostImageDto {
-    private String imageUrl;
+    private String imgUrl;
 
     public PostImageDto(Image image){
-        this.imageUrl = image.getImgUrl();
+        this.imgUrl = image.getImgUrl();
     }
 }

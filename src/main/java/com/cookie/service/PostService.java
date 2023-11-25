@@ -4,15 +4,12 @@ import com.cookie.domain.*;
 import com.cookie.dto.*;
 import com.cookie.global.exception.BusinessException;
 import com.cookie.global.response.ErrorCode;
-import com.cookie.global.response.ResponseDto;
 import com.cookie.repository.BoardRepository;
 import com.cookie.repository.ImageRepository;
 import com.cookie.repository.MemberRepository;
 import com.cookie.repository.PostRepository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -74,7 +71,7 @@ public class PostService {
             MemberResponseDto memberResponseDto = MemberResponseDto.builder()
                     .id(writer.getId())
                     .nickname(writer.getNickname())
-                    .profile(writer.getProfile())
+                    .imgUrl(writer.getProfile())
                     .build();
 
             PostDetailResponseDto detailResponseDto = PostDetailResponseDto.builder()
@@ -83,24 +80,36 @@ public class PostService {
                     .title(post.getTitle())
                     .content(post.getContent())
                     .createdDate(post.getCreatedAt().toString())
-                    .imageList(postImageDtos)
+                    .imgUrlList(postImageDtos)
                     .build();
 
-            PostResponseDto responseDto = PostResponseDto.builder()
-                    .id(detailResponseDto.getId())
-                    .member(detailResponseDto.getMember())
-                    .title(detailResponseDto.getTitle())
-                    .content(detailResponseDto.getContent())
-                    .createdDate(detailResponseDto.getCreatedDate())
-                    .img(detailResponseDto.getImageList().get(0).getImageUrl())
-                    .build();
+            if (detailResponseDto.getImgUrlList().size() == 0){
+                PostResponseDto responseDto = PostResponseDto.builder()
+                        .id(detailResponseDto.getId())
+                        .member(detailResponseDto.getMember())
+                        .title(detailResponseDto.getTitle())
+                        .content(detailResponseDto.getContent())
+                        .createdDate(detailResponseDto.getCreatedDate())
+                        .build();
+                postResponseDtos.add(responseDto);
+            }
 
-            postResponseDtos.add(responseDto);
+            else {
+                PostResponseDto responseDto = PostResponseDto.builder()
+                        .id(detailResponseDto.getId())
+                        .member(detailResponseDto.getMember())
+                        .title(detailResponseDto.getTitle())
+                        .content(detailResponseDto.getContent())
+                        .createdDate(detailResponseDto.getCreatedDate())
+                        .imgUrl(detailResponseDto.getImgUrlList().get(0).getImgUrl())
+                        .build();
+                postResponseDtos.add(responseDto);
+            }
         }
 
-            PostListResponseDto listResponseDto = PostListResponseDto.builder()
-                    .postList(postResponseDtos)
-                    .build();
+        PostListResponseDto listResponseDto = PostListResponseDto.builder()
+                .postList(postResponseDtos)
+                .build();
         return listResponseDto;
 
     }
@@ -123,7 +132,7 @@ public class PostService {
         MemberResponseDto memberResponseDto = MemberResponseDto.builder()
                 .id(writer.getId())
                 .nickname(writer.getNickname())
-                .profile(writer.getProfile())
+                .imgUrl(writer.getProfile())
                 .build();
 
         PostDetailResponseDto responseDto = PostDetailResponseDto.builder()
@@ -132,7 +141,7 @@ public class PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdDate(post.getCreatedAt().toString())
-                .imageList(postImageDtos)
+                .imgUrlList(postImageDtos)
                 .build();
         return responseDto;
     }
