@@ -11,5 +11,5 @@ public class BoardRequestDto {
 
     private String title;
     private String description;
-    private String imgFile;
+    private String imgUrl;
 }
