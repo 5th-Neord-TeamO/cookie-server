@@ -116,7 +116,7 @@ public class PostService {
             }
         }
 
-        postResponseDtos.sort(Comparator.comparing(PostResponseDto::getCreatedDate));
+        postResponseDtos.sort(Comparator.comparing(PostResponseDto::getCreatedDate).reversed());
 
         return postResponseDtos.stream().toList();
 
