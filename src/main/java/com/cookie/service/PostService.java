@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,7 +88,7 @@ public class PostService {
                     .member(memberResponseDto)
                     .title(post.getTitle())
                     .description(post.getContent())
-                    .createdDate(post.getCreatedAt().toString())
+                    .createdDate(post.getCreatedAt().withNano(0).toString())
                     .imgUrlList(postImageDtos)
                     .build();
 
@@ -114,6 +115,8 @@ public class PostService {
                 postResponseDtos.add(responseDto);
             }
         }
+
+        postResponseDtos.sort(Comparator.comparing(PostResponseDto::getCreatedDate));
 
         return postResponseDtos.stream().toList();
 
@@ -145,7 +148,7 @@ public class PostService {
                 .member(memberResponseDto)
                 .title(post.getTitle())
                 .description(post.getContent())
-                .createdDate(post.getCreatedAt().toString())
+                .createdDate(post.getCreatedAt().withNano(0).toString())
                 .imgUrlList(postImageDtos)
                 .build();
         return responseDto;
