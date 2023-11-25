@@ -4,10 +4,7 @@ import com.cookie.domain.*;
 import com.cookie.dto.*;
 import com.cookie.global.exception.BusinessException;
 import com.cookie.global.response.ErrorCode;
-import com.cookie.repository.BoardRepository;
-import com.cookie.repository.ImageRepository;
-import com.cookie.repository.MemberRepository;
-import com.cookie.repository.PostRepository;
+import com.cookie.repository.*;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +23,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final ImageRepository imageRepository;
+
+    private final CommentService commentService;
 
     @Transactional
     public PostCreateResponseDto savePost(Long board_id, String authorization, PostCreateRequestDto requestDto){
@@ -170,5 +170,24 @@ public class PostService {
         post.setContent(requestDto.getDescription());
         image.setImgUrl(requestDto.getImgUrl());
         return Map.of("id", 1L);
+    }
+
+
+    //게시글 삭제
+    public void deletePost(String authorization, Long boardId, Long postId) {
+        Member member = memberRepository.findByToken(authorization)
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Post post = commentService.validateExistPost(postId);
+        List<Comment> comments= commentRepository.findAllByPostId(postId);
+
+        if (commentService.validateMember(member.getId(), post.getMember().getId())) {
+            for (int i=0; i<comments.size(); i++) {
+                commentRepository.delete(comments.get(i));
+            }
+            postRepository.delete(post);
+        } else {
+            throw new BusinessException(ErrorCode.MEMBER_UNAUTHORIZED);
+        }
     }
 }
