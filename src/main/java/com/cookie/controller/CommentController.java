@@ -4,9 +4,11 @@ import com.cookie.dto.CommentRequestDto;
 import com.cookie.dto.CommentResponseDto;
 import com.cookie.global.response.DataResponseDto;
 import com.cookie.service.CommentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "댓글 관련 API")
 @RestController
 @RequestMapping("/api/v1/comment")
 @RequiredArgsConstructor

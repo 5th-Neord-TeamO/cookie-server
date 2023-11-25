@@ -4,6 +4,7 @@ import com.cookie.dto.*;
 
 import com.cookie.global.response.DataResponseDto;
 import com.cookie.service.PostService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "쿠키 관련 API")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/api/v1")
