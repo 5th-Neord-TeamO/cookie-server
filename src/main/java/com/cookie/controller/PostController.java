@@ -4,6 +4,7 @@ import com.cookie.dto.PostCreateRequestDto;
 
 import com.cookie.dto.PostDetailResponseDto;
 import com.cookie.dto.PostListResponseDto;
+import com.cookie.global.response.DataResponseDto;
 import com.cookie.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,19 +20,19 @@ public class PostController {
 
     //게시글 목록 조회
     @GetMapping("/board/{board_id}")
-    public PostListResponseDto getPostList(@PathVariable Long board_id, @RequestHeader("Authorization") String authorization){
-        return postService.findPostList(board_id, authorization);
+    public DataResponseDto<PostListResponseDto> getPostList(@PathVariable Long board_id, @RequestHeader("Authorization") String authorization){
+        return DataResponseDto.from(postService.findPostList(board_id, authorization));
     }
 
     //게시글 1개 조회
     @GetMapping("/board/{board_id}/post/{post_id}")
-    public PostDetailResponseDto getPostDetail(@PathVariable Long board_id, @PathVariable Long post_id, @RequestHeader("Authorization") String authorization){
-        return postService.findPostDetail(board_id, post_id, authorization);
+    public DataResponseDto<PostDetailResponseDto> getPostDetail(@PathVariable Long board_id, @PathVariable Long post_id, @RequestHeader("Authorization") String authorization){
+        return DataResponseDto.from(postService.findPostDetail(board_id, post_id, authorization));
     }
 
     @PostMapping("/board/{board_id}")
-    public ResponseEntity createPost(@PathVariable Long board_id, @RequestHeader("Authorization") String authorization, @RequestBody PostCreateRequestDto requestDto){
-        return postService.savePost(board_id, authorization, requestDto);
+    public DataResponseDto<ResponseEntity> createPost(@PathVariable Long board_id, @RequestHeader("Authorization") String authorization, @RequestBody PostCreateRequestDto requestDto){
+        return DataResponseDto.from(postService.savePost(board_id, authorization, requestDto));
     }
 
 }
