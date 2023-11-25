@@ -25,8 +25,8 @@ public class Board extends BaseTimeEntity {
 
     private String title; // 제목
 
-    private String discription; // 방 소개
+    private String description; // 방 소개
 
-    private String imgPath; // 사진 경로
+    private String imgUrl; // 사진 URL
 
 }
