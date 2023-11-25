@@ -1,5 +1,6 @@
 package com.cookie.domain;
 
+import com.cookie.dto.MemberEditRequestDto;
 import com.cookie.global.domain.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -19,7 +21,10 @@ public class Member extends BaseTimeEntity {
     private Long id;
 
     private String token;
+
+    @Setter
     private String nickname;
+
     private String profile;
 
     @Builder
