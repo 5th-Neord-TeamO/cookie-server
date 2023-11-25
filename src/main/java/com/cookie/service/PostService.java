@@ -85,7 +85,7 @@ public class PostService {
                     .member(memberResponseDto)
                     .title(post.getTitle())
                     .description(post.getContent())
-                    .createdDate(post.getCreatedAt().toString())
+                    .createdDate(post.getCreatedAt().withNano(0).toString())
                     .imgUrlList(postImageDtos)
                     .build();
 
@@ -143,7 +143,7 @@ public class PostService {
                 .member(memberResponseDto)
                 .title(post.getTitle())
                 .description(post.getContent())
-                .createdDate(post.getCreatedAt().toString())
+                .createdDate(post.getCreatedAt().withNano(0).toString())
                 .imgUrlList(postImageDtos)
                 .build();
         return responseDto;
