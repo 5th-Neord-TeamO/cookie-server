@@ -12,13 +12,13 @@ public class MemberInitializer {
 
     private final MemberRepository memberRepository;
 
-    @PostConstruct
-    public void init() {
-        memberRepository.save(Member.builder()
-            .token("token")
-            .nickname("초록색빼빼로")
-            .profile("https://dimg.donga.com/wps/NEWS/IMAGE/2023/06/22/119900215.1.jpg")
-            .build()
-        );
-    }
+//    @PostConstruct
+//    public void init() {
+//        memberRepository.save(Member.builder()
+//            .token("token")
+//            .nickname("초록색빼빼로")
+//            .profile("https://dimg.donga.com/wps/NEWS/IMAGE/2023/06/22/119900215.1.jpg")
+//            .build()
+//        );
+//    }
 }
