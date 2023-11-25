@@ -28,8 +28,7 @@ public class PostService {
     private final ImageRepository imageRepository;
 
     @Transactional
-    public ResponseEntity savePost(Long board_id, String authorization, PostCreateRequestDto requestDto){
-        try {
+    public PostCreateResponseDto savePost(Long board_id, String authorization, PostCreateRequestDto requestDto){
             Member member = memberRepository.findByToken(authorization)
                     .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
             Board board = boardRepository.findById(board_id)
@@ -42,11 +41,18 @@ public class PostService {
                     .content(requestDto.getContent())
                     .build();
             postRepository.save(post);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        return PostCreateResponseDto.builder()
+            .createdAt(post.getCreatedAt().toString())
+            .title(post.getTitle())
+            .description(post.getContent())
+            .member(PostCreateResponseDto.AuthorResponseDto.builder()
+                    .id(member.getId())
+                    .nickname(member.getNickname())
+                    .imgUrl(member.getProfile())
+                    .build())
+            .build();
+
     }
 
     //게시글 목록 조회
