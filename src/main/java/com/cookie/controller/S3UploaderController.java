@@ -7,6 +7,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +20,7 @@ public class S3UploaderController {
     private final S3UploaderService s3UploaderService;
 
     @PostMapping
-    public DataResponseDto<Map<String, String>> uploadFile(MultipartFile multipartFile) {
+    public DataResponseDto<Map<String, String>> uploadFile(@RequestParam("multipartFile") MultipartFile multipartFile) {
 
         return DataResponseDto.from(s3UploaderService.uploadFile(multipartFile));
     }
