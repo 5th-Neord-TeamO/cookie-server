@@ -48,6 +48,6 @@ public class S3UploaderService {
         String fileUrl = amazonS3Client.getUrl(bucket, fileName).toString();
         log.info("S3 업로드 완료: {}", fileUrl);
 
-        return Map.of("fileUrl", fileUrl);
+        return Map.of("imgUrl", fileUrl);
     }
 }
