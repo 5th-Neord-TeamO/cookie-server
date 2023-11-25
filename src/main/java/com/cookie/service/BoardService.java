@@ -6,6 +6,7 @@ import com.cookie.domain.MemberBoard;
 import com.cookie.dto.BoardRequestDto;
 import com.cookie.dto.BoardResponseDto;
 import com.cookie.dto.MyBoardListResponseDto;
+import com.cookie.dto.PostResponseDto;
 import com.cookie.global.exception.BusinessException;
 import com.cookie.global.response.ErrorCode;
 import com.cookie.repository.BoardRepository;
@@ -14,6 +15,7 @@ import com.cookie.repository.MemberRepository;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -111,6 +113,8 @@ public class BoardService {
             }
         }
 
+        response.sort(Comparator.comparing(MyBoardListResponseDto::getId).reversed());
+
         return response;
     }
 
@@ -148,6 +152,8 @@ public class BoardService {
                 response.add(dto);
             }
         }
+
+        response.sort(Comparator.comparing(MyBoardListResponseDto::getId).reversed());
 
         return response;
 
